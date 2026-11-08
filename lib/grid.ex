@@ -12,7 +12,8 @@ defmodule Grid do
 
   @type t :: %__MODULE__{
           num_rows: non_neg_integer(),
-          num_cols: non_neg_integer()
+          num_cols: non_neg_integer(),
+          matrix: %{non_neg_integer() => %{non_neg_integer() => Cell.t()}}
         }
 
   @enforce_keys [:num_rows, :num_cols]
@@ -99,11 +100,15 @@ defmodule Grid do
   Returns a list of all neighbors of the given cell.
   """
   def neighbors_of(%__MODULE__{} = grid, %Cell{} = cell) do
+    neighbors_of(grid, cell.coord)
+  end
+
+  def neighbors_of(%__MODULE__{} = grid, %Coordinate{} = coordinate) do
     [
-      get_neighbor(grid, cell, :north),
-      get_neighbor(grid, cell, :south),
-      get_neighbor(grid, cell, :east),
-      get_neighbor(grid, cell, :west)
+      get_neighbor(grid, coordinate, :north),
+      get_neighbor(grid, coordinate, :south),
+      get_neighbor(grid, coordinate, :east),
+      get_neighbor(grid, coordinate, :west)
     ]
     |> Enum.reject(&is_nil/1)
   end

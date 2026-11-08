@@ -4,6 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+        {
+            "type": "mix_task",
+            "request": "launch",
+            "name": "mix run binary_tree_dist",
+            "task": "run",
+            "taskArgs": ["-e", "Maze.binary_tree_maze_dist()"],
+            "startApps": true,
+            "projectDir": "${workspaceRoot}"
+        },
         {
             "type": "mix_task",
             "request": "launch",

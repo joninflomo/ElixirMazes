@@ -26,6 +26,11 @@ defmodule Maze do
     output_maze(maze, format, filename)
   end
 
+  def binary_tree_maze_dist() do
+    maze = BinaryTreeMaze.generate(5, 5)
+    {maze, Distances.calculate(maze, 1, 1)}
+  end
+
   @doc """
     Generate a 5x5 maze using the Sidewinder algorithm.
 
@@ -47,6 +52,11 @@ defmodule Maze do
   def sidewinder_maze(format \\ :text, filename \\ "sidewinder.png") do
     maze = SidewinderMaze.generate(5, 5)
     output_maze(maze, format, filename)
+  end
+
+  def sidewinder_maze_dist() do
+    maze = SidewinderMaze.generate(5, 5)
+    {maze, Distances.calculate(maze, 1, 1)}
   end
 
   # ==========================
