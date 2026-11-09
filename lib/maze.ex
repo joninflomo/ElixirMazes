@@ -75,7 +75,7 @@ defmodule Maze do
   end
 
   defp output_maze_with_dist(maze) do
-    dist = Distances.calculate(maze, 1, 1)
+    dist = Distances.calculate(maze, Coordinate.new(1, 1))
 
     str =
       Renderer.to_ascii(maze, fn cell ->
