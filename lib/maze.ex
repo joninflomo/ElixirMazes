@@ -28,7 +28,7 @@ defmodule Maze do
 
   def binary_tree_maze_dist() do
     maze = BinaryTreeMaze.generate(5, 5)
-    {maze, Distances.calculate(maze, 1, 1)}
+    output_maze_with_dist(maze)
   end
 
   @doc """
@@ -56,7 +56,7 @@ defmodule Maze do
 
   def sidewinder_maze_dist() do
     maze = SidewinderMaze.generate(5, 5)
-    {maze, Distances.calculate(maze, 1, 1)}
+    output_maze_with_dist(maze)
   end
 
   # ==========================
@@ -64,6 +64,7 @@ defmodule Maze do
   # ==========================
 
   defp output_maze(maze, :text, _) do
+    # IO.puts("#{Renderer.to_ascii(maze)}")
     IO.puts(maze)
   end
 
@@ -71,5 +72,16 @@ defmodule Maze do
     IO.puts("Writing image to file #{filename}")
     Image.write!(Renderer.to_png(maze), filename)
     :ok
+  end
+
+  defp output_maze_with_dist(maze) do
+    dist = Distances.calculate(maze, 1, 1)
+
+    str =
+      Renderer.to_ascii(maze, fn cell ->
+        Integer.to_string(Distances.get_cell_distance(dist, cell.coord), 36)
+      end)
+
+    IO.puts(str)
   end
 end

@@ -225,5 +225,5 @@ end
 # ****************************
 
 defimpl String.Chars, for: Grid do
-  def to_string(%Grid{} = grid), do: Renderer.to_string(grid)
+  def to_string(%Grid{} = grid), do: Renderer.to_ascii(grid)
 end

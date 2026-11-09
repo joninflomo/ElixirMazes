@@ -6,11 +6,12 @@ defmodule Renderer do
   @doc """
   Converts a grid to a string representation.
   """
-  def to_string(%Grid{} = grid) do
+  def to_ascii(%Grid{} = grid, cell_contents \\ &empty_cell_body/1) do
     str = maze_north_border_string(grid)
 
     Enum.reduce(1..grid.num_rows, str, fn row_num, str_acc ->
-      str_acc <> row_content_string(grid, row_num) <> row_south_border_string(grid, row_num)
+      str_acc <>
+        row_content_string(grid, row_num, cell_contents) <> row_south_border_string(grid, row_num)
     end)
   end
 
@@ -44,14 +45,18 @@ defmodule Renderer do
     @corner <> String.duplicate(@h_wall <> @corner, grid.num_cols) <> "\n"
   end
 
+  defp empty_cell_body(%Cell{} = _cell) do
+    " "
+  end
+
   # Draw a row of cells, including the vertical boundaries between them.
-  defp row_content_string(grid, row_num) do
+  defp row_content_string(grid, row_num, cell_contents_fn) do
     content =
       Enum.reduce(1..grid.num_cols, @v_wall, fn col_num, string_acc ->
         cell = Grid.get_cell(grid, row_num, col_num)
         east_boundary = if Grid.has_link?(grid, cell, :east), do: @v_open, else: @v_wall
 
-        string_acc <> @body <> east_boundary
+        string_acc <> " #{cell_contents_fn.(cell)} " <> east_boundary
       end)
 
     content <> "\n"

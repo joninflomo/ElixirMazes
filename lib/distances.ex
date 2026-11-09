@@ -1,10 +1,13 @@
 defmodule Distances do
   @moduledoc """
-  Represents maze cell distances from a starting maze cell calculated using Dijkstra’s algorithm.
+  Represents maze cell distances from a starting maze cell calculated using
+  Dijkstra’s algorithm.
 
   ## Fields
-    - `root_coord`: Coordinates for the root maze cell from which distances are measured.
-    - `cell_distances`: A map of maps representing the distances from the root cell to each cell in the maze.
+    - `root_coord`: Coordinates for the root maze cell from which distances are
+    measured.
+    - `cell_distances`: A map of maps representing the distances from the root
+    cell to each cell in the maze.
   """
   @type t :: %__MODULE__{
           root_coord: Coordinate.t(),
@@ -14,8 +17,8 @@ defmodule Distances do
   defstruct [:root_coord, cell_distances: %{}]
 
   @doc """
-  Creates a new `Distances` struct for the given maze and root cell at the given
-  row and column.
+  Calculates the distances from the root cell to all other cells in the maze
+  using Dijkstra's algorithm.
 
   ## Parameters
     - maze: The maze for which to calculate distances.
@@ -32,7 +35,12 @@ defmodule Distances do
   end
 
   @doc """
-  Creates a new `Distances` struct for the given maze and root coordinate.
+  Calculates the distances from the root cell to all other cells in the maze
+  using Dijkstra's algorithm.
+
+  ## Parameters
+    - maze: The maze for which to calculate distances.
+    - root_cell_coord: The coordinates of the root cell.
 
   Returns a `Distances` struct.
   """
@@ -45,19 +53,26 @@ defmodule Distances do
     }
   end
 
-  def get_cell_distance(%__MODULE__{} = distances, %Coordinate{} = coord),
-    do: get_cell_distance(distances.cell_distances, coord)
+  @doc """
+  Gets the distance from the root cell to the given cell.
+  """
+  def get_cell_distance(%__MODULE__{} = distances, %Cell{} = cell),
+    do: get_distance(distances.cell_distances, cell.coord)
 
-  def get_cell_distance(%{} = dist, %Coordinate{row: row, col: col}) do
+  def get_cell_distance(%__MODULE__{} = distances, %Coordinate{} = coord),
+    do: get_distance(distances.cell_distances, coord)
+
+  # ==========================
+  # Internal Functions
+  # ==========================
+
+  # Get the distance value for a specific cell in the matrix
+  defp get_distance(%{} = dist, %Coordinate{row: row, col: col}) do
     case Map.get(dist, row) do
       nil -> nil
       row_map -> Map.get(row_map, col)
     end
   end
-
-  # ==========================
-  # Internal Functions
-  # ==========================
 
   # Set the distance value for a specific cell in the matrix
   defp set_distance(%{} = distance_matrix, %Coordinate{} = matrix_coord, distance) do
