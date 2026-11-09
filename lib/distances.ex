@@ -22,24 +22,6 @@ defmodule Distances do
 
   ## Parameters
     - maze: The maze for which to calculate distances.
-    - root_cell_row: The row of the root cell.
-    - root_cell_col: The column of the root cell.
-
-  Returns a `Distances` struct.
-  """
-  def calculate(%Grid{} = maze, root_cell_row, root_cell_col)
-      when is_integer(root_cell_row) and is_integer(root_cell_col) and root_cell_row > 0 and
-             root_cell_col > 0 do
-    root_coord = %Coordinate{row: root_cell_row, col: root_cell_col}
-    calculate(maze, root_coord)
-  end
-
-  @doc """
-  Calculates the distances from the root cell to all other cells in the maze
-  using Dijkstra's algorithm.
-
-  ## Parameters
-    - maze: The maze for which to calculate distances.
     - root_cell_coord: The coordinates of the root cell.
 
   Returns a `Distances` struct.
@@ -57,22 +39,21 @@ defmodule Distances do
   Gets the distance from the root cell to the given cell.
   """
   def get_cell_distance(%__MODULE__{} = distances, %Cell{} = cell),
-    do: get_distance(distances.cell_distances, cell.coord)
+    do: get_cell_distance(distances.cell_distances, cell.coord)
 
   def get_cell_distance(%__MODULE__{} = distances, %Coordinate{} = coord),
-    do: get_distance(distances.cell_distances, coord)
+    do: get_cell_distance(distances.cell_distances, coord)
 
-  # ==========================
-  # Internal Functions
-  # ==========================
-
-  # Get the distance value for a specific cell in the matrix
-  defp get_distance(%{} = dist, %Coordinate{row: row, col: col}) do
+  def get_cell_distance(%{} = dist, %Coordinate{row: row, col: col}) do
     case Map.get(dist, row) do
       nil -> nil
       row_map -> Map.get(row_map, col)
     end
   end
+
+  # ==========================
+  # Internal Functions
+  # ==========================
 
   # Set the distance value for a specific cell in the matrix
   defp set_distance(%{} = distance_matrix, %Coordinate{} = matrix_coord, distance) do
